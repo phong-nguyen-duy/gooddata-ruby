@@ -354,12 +354,7 @@ module GoodData
             tmp = without_check(PARAMS, params) do
               File.open(data_source.realize(params), 'r:UTF-8')
             end
-
-            begin
-              data = read_csv_file(tmp)
-            rescue Exception => e # rubocop:disable RescueException
-              fail "There was an error during loading users from csv file. Message: #{e.message}. Error: #{e}"
-            end
+            data = CSV.read(tmp, headers: true)
           end
 
           data.map do |row|
@@ -398,30 +393,6 @@ module GoodData
               :ip_whitelist => ip_whitelist
             }
           end
-        end
-
-        def read_csv_file(path)
-          GoodData.logger.info('Start reading csv file')
-          res = []
-          row_count = 0
-
-          CSV.foreach(path, :headers => true) do |row|
-            if block_given?
-              data = yield row
-            else
-              data = row
-            end
-
-            if data
-              row_count += 1
-              res << data
-            end
-
-            GoodData.logger.info("Read #{row_count} rows") if (row_count % 50_000).zero?
-          end
-
-          GoodData.logger.info("Done reading csv file, total #{row_count} rows")
-          res
         end
       end
     end
