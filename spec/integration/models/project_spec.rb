@@ -20,7 +20,7 @@ describe GoodData::Project, :vcr, :vcr_all_cassette => 'model', :constraint => '
   end
 
   describe 'projects' do
-    it 'Can get all projects and not limit' do
+    it 'Can get all projects' do
       projects = @client.projects(:all)
       expect(projects).to_not be_nil
       expect(projects).to be_a_kind_of(Array)
