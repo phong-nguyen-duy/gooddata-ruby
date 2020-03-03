@@ -32,6 +32,12 @@ module GoodData
 
         description 'Query'
         param :query, instance_of(Type::GdSmartHashType), required: false
+
+        description 'DataProduct to manage'
+        param :data_product, instance_of(Type::GDDataProductType), required: false
+
+        description 'Released master project should be used in next rollout'
+        param :set_master_project, instance_of(Type::StringType), required: false
       end
 
       DEFAULT_TABLE_NAME = 'LCM_RELEASE'
@@ -47,12 +53,21 @@ module GoodData
 
           params.segments.map do |segment_in|
             segment_id = segment_in.segment_id
+            data_product_id = params.data_product.data_product_id
+
+            if params.set_master_project
+              master_project_id = params.set_master_project
+              version = get_latest_version(params, domain_name, data_product_id, segment_id) + 1
+            else
+              master_project_id = segment_in[:master_pid]
+              version = segment_in[:version]
+            end
 
             placeholders = {
-              data_product_id: segment_in[:data_product_id],
-              segment_id: segment_in[:segment_id],
-              master_project_id: segment_in[:master_pid],
-              version: segment_in[:version],
+              data_product_id: data_product_id,
+              segment_id: segment_id,
+              master_project_id: master_project_id,
+              version: version,
               timestamp: segment_in[:timestamp],
               table_name: params.release_table_name || DEFAULT_TABLE_NAME
             }
@@ -61,8 +76,8 @@ module GoodData
 
             {
               segment: segment_id,
-              master_pid: segment_in[:master_pid],
-              version: segment_in[:version],
+              master_pid: master_project_id,
+              version: version,
               timestamp: segment_in[:timestamp]
             }
           end
@@ -91,6 +106,20 @@ module GoodData
             version = placeholders[:version]
             GoodData::LCM2::Helpers.update_latest_master_to_nfs(domain_id, data_product_id, segment_id, master_pid, version)
           end
+        end
+
+        def get_latest_version(params, domain_name, data_product_id, segment_id)
+          if params.ads_client
+            current_master = GoodData::LCM2::Helpers.latest_master_project_from_ads(
+              params.release_table_name,
+              params.ads_client,
+              segment_id
+            )
+          else
+            current_master = GoodData::LCM2::Helpers.latest_master_project_from_nfs(domain_name, data_product_id, segment_id)
+          end
+          return 0 unless current_master
+          current_master[:version].to_i
         end
       end
     end
