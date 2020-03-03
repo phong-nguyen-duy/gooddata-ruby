@@ -119,6 +119,7 @@ module GoodData
             current_master = GoodData::LCM2::Helpers.latest_master_project_from_nfs(domain_name, data_product_id, segment_id)
           end
           return 0 unless current_master
+
           current_master[:version].to_i
         end
       end
