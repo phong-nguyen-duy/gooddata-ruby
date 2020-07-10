@@ -55,6 +55,7 @@ begin
   params['GDC_EXECUTION_ID'] = execution_id
   params['GDC_EXECUTION_LOG_PATH'] = execution_log_path
   params['GDC_EXECUTION_RESULT_LOG_PATH'] = execution_result_log_path
+  params['SPLUNK_LOGGING'] = true
 
   log.info "action=#{brick_type}_execution status=start commit_hash=#{commit_hash} execution_id=#{execution_id}"
   brick_pipeline.call(params)
