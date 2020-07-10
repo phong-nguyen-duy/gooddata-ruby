@@ -35,6 +35,7 @@ end
 shared_context 'lcm bricks' do |opts = {}|
   before(:all) do
     ENV['RELEASE_TABLE_NFS_DIRECTORY'] = 'release-tables'
+    GoodData.splunk_logging_off
     @config = {
       verify_ssl: false,
       environment: 'TESTING',

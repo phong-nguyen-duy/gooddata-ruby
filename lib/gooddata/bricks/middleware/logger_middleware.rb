@@ -51,7 +51,7 @@ module GoodData
         params['GDC_LOGGER'] = logger
         GoodData.logging_http_on if params['HTTP_LOGGING'] && params['HTTP_LOGGING'].to_b
 
-        if params['SPLUNK_LOGGING'] && params['SPLUNK_LOGGING'].to_b
+        unless params['NO_SPLUNK_LOGGING'] && params['NO_SPLUNK_LOGGING'].to_b
           GoodData.logger.info "Statistics collecting is turned ON. All the data is anonymous."
           # NODE_NAME is set up by k8s execmgr
           syslog_node = ENV['NODE_NAME']
