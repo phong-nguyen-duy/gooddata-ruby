@@ -132,6 +132,7 @@ module GoodData
       GoodData.logger.info("valid_elements url: #{final_url}")
       results = client.post(final_url, 'validElementsRequest' => request_payload)
 
+      GoodData.logger.info("valid_elements result: #{results}")
       # Implementation of polling is based on
       # https://opengrok.intgdc.com/source/xref/gdc-backend/src/test/java/com/gooddata/service/dao/ValidElementsDaoTest.java
       status_url = results['uri']

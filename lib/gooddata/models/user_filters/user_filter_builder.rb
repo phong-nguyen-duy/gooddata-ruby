@@ -221,7 +221,7 @@ module GoodData
       GoodData.logger.info("filter: #{filter}")
       GoodData.logger.info("labels_cache: #{labels_cache}")
       GoodData.logger.info("lookups_cache: #{lookups_cache}")
-      GoodData.logger.info("label: #{label}")
+      GoodData.logger.info("label: #{label.uri}")
       element_uris_by_values = Hash[values.map do |v|
         if lookups_cache.key?(label.uri)
           [v, lookups_cache[label.uri][v]]
@@ -229,7 +229,7 @@ module GoodData
           [v, label.find_value_uri(v)]
         end
       end]
-
+      GoodData.logger.info("element_uris_by_values: #{element_uris_by_values}")
       missing_value_errors = element_uris_by_values.select { |_, v| v.nil? }.map do |k, _|
         {
           type: :error,
