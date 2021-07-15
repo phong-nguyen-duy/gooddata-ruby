@@ -218,7 +218,10 @@ module GoodData
 
       label = labels_cache[filter[:label]]
       errors = []
-
+      GoodData.logger.info("filter: #{filter}")
+      GoodData.logger.info("labels_cache: #{labels_cache}")
+      GoodData.logger.info("lookups_cache: #{lookups_cache}")
+      GoodData.logger.info("label: #{label}")
       element_uris_by_values = Hash[values.map do |v|
         if lookups_cache.key?(label.uri)
           [v, lookups_cache[label.uri][v]]

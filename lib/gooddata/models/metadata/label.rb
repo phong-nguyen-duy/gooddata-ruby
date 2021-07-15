@@ -44,6 +44,7 @@ module GoodData
     # @return [Array] Results
     def get_valid_elements(*args)
       results, params = valid_elements(*args)
+      GoodData.logger.info("get_valid_elements result: #{results}")
       # TMA-775 - the validElements API can possibly return more matches than requested (usually 1)
       # so we do a preliminary first request to check and then increase the limit if needed
       if results['validElements']['paging']['total'].to_i != params[:limit]
@@ -128,6 +129,7 @@ module GoodData
         final_url = "#{uri}/validElements?#{query_params}"
       end
 
+      GoodData.logger.info("valid_elements url: #{final_url}")
       results = client.post(final_url, 'validElementsRequest' => request_payload)
 
       # Implementation of polling is based on
