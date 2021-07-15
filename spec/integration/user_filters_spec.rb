@@ -9,10 +9,12 @@ require 'gooddata/exceptions/filter_maqlization'
 
 describe "User filters implementation", :vcr, :constraint => 'slow' do
   before(:all) do
+    GoodData.logging_on
     @spec = JSON.parse(File.read("./spec/data/blueprints/test_project_model_spec.json"), :symbolize_names => true)
     @client = ConnectionHelper.create_default_connection
     blueprint = GoodData::Model::ProjectBlueprint.new(@spec)
     @project = @client.create_project_from_blueprint(blueprint, :token => ConnectionHelper::SECRETS[:gd_project_token], environment: ProjectHelper::ENVIRONMENT)
+    GoodData.logger.info("Created project: #{@project.pid}")
     @domain = @client.domain(ConnectionHelper::DEFAULT_DOMAIN)
 
     @label = GoodData::Attribute.find_first_by_title('Dev', client: @client, project: @project).label_by_name('email')
