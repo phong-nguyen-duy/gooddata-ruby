@@ -75,6 +75,7 @@ describe "User filters implementation", :vcr, :constraint => 'slow' do
     expect(result[:deleted].count).to eq 0
   end
 
+=begin
   it "should return errors when asked to set a user not in project. Some filters are set up though." do
     filters = [
       ['nonexistent_user@gooddata.com', @label.uri, "tomas@gooddata.com"],
@@ -261,7 +262,9 @@ describe "User filters implementation", :vcr, :constraint => 'slow' do
     expect(results[:results].select { |r| r[:type] == :create }.count).to eq 0
     expect(@project.data_permissions.count).to eq 1
   end
+=end
 
+=begin
   context 'when validating MUFs via report computation' do
     before do
       nu = ProjectHelper.ensure_users(caller: self.class.description, client: @client)
@@ -337,4 +340,5 @@ describe "User filters implementation", :vcr, :constraint => 'slow' do
       expect(e.message).to include msg
     end
   end
+=end
 end
