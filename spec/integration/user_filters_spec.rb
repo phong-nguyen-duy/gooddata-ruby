@@ -46,12 +46,12 @@ describe "User filters implementation", :vcr, :constraint => 'slow' do
   end
 
   after(:all) do
-    @project.delete if @project
+    #@project.delete if @project
     @client && @client.disconnect
   end
 
   after(:each) do
-    @project.data_permissions.pmap(&:delete)
+    #@project.data_permissions.pmap(&:delete)
   end
 
   it "should create a mandatory user filter" do
