@@ -140,7 +140,12 @@ module GoodData
         GoodData.logger.info("valid_elements start polling")
         results = client.poll_on_response(status_url) do |body|
           GoodData.logger.info("valid_elements polling: #{body}")
-          status = body['taskState'] && body['taskState']['status']
+          if body['uri']
+            status = 'RUNNING'
+          else
+            status = body['taskState'] && body['taskState']['status']
+          end
+
           status == 'RUNNING' || status == 'PREPARED'
         end
       end
